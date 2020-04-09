@@ -11,18 +11,17 @@ def round(players):
 	while guess is not None:
 		player = players[pindex % nplayers]	
 		guess = player.guess(prev_guess, nplayers)
-		if guess is not None:
-			prev_guess.append(guess)
-			pindex += 1
+		prev_guess.append(guess)
+		pindex += 1
 	
 		
-	if len(prev_guess) > 0:	
-		guess = prev_guess[len(prev_guess) - 1]
+	if len(prev_guess) > 1:	
+		guess = prev_guess[len(prev_guess) - 2]
 		truth = 0
 		for player in players:
 			truth += player.dice.count(guess[1])
 	
-		winner_index = pindex - 1 % nplayers if guess[0] >= truth else pindex % nplayers
+		winner_index = pindex - 2 % nplayers if guess[0] >= truth else pindex - 1 % nplayers
 	else: #first player said bluff
 		winner_index = 1	
 
