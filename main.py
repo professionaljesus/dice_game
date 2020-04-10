@@ -5,14 +5,18 @@ def round(players):
 	pindex = 0
 	prev_guess = []
 	guess = (0,0)
-	for player in players:
-		player.cast()	
+
+	player_dice = [0]*nplayers
+
+	for i in range(nplayers):
+		players[i].cast()	
+		player_dice[i] = players[i].ndice
 
 	while guess is not None:
-		player = players[pindex % nplayers]	
-		guess = player.guess(prev_guess, nplayers)
+		player = players[pindex]	
+		guess = player.guess(pindex, prev_guess, nplayers, player_dice)
 		prev_guess.append(guess)
-		pindex += 1
+		pindex = (pindex + 1) % nplayers
 	
 		
 	if len(prev_guess) > 1:	
@@ -21,7 +25,7 @@ def round(players):
 		for player in players:
 			truth += player.dice.count(guess[1])
 	
-		winner_index = pindex - 2 % nplayers if guess[0] >= truth else pindex - 1 % nplayers
+		winner_index = (pindex - 2) % nplayers if guess[0] >= truth else (pindex - 1) % nplayers
 	else: #first player said bluff
 		winner_index = 1	
 

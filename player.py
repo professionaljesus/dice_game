@@ -10,7 +10,7 @@ class Player:
 		self.dice = [random.randint(1,7) for i in range(self.ndice)]
 	
 	#(Number of dice, value of die), None if bluff
-	def guess(self, previous_guesses, nplayers):
+	def guess(self, player_index, previous_guesses, nplayers, players_dice):
 		if len(previous_guesses) > 0:
 			prev_guess = previous_guesses[len(previous_guesses) - 1]
 
