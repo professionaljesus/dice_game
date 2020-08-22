@@ -1,4 +1,8 @@
 from player import Player
+from server import Server
+from threading import Thread
+from queue import Queue
+import thread
 
 def valid_guess(guess, prev_guess):
 	if len(prev_guess) == 0:
@@ -42,7 +46,6 @@ def round(players):
 			truth = 0
 			for player in players:
 				truth += player.dice.count(guess[1])
-			print('truth',truth,'guess',guess[0])
 			if guess[0] >= truth:
 				winner_index = (pindex - 2) % nplayers 
 			else:
@@ -61,11 +64,22 @@ def round(players):
 	del players[pindex]
 	return players
 
+
 if __name__ == "__main__":
 	nplayers = 5
 	ndice = 6
 	players = [Player(ndice) for i in range(nplayers)]
+	player_qs = [Queue() for i in range(nplayers)]
 
+	server = Server()
+	t = Thread(target=server.accept_connections, args=(player_qs,))
+	t.start()
 	while len(players) > 1:
 		players = round(players)
 		print(len(players))
+
+	for q in player_qs:
+		q.put("kill")
+
+	t.join()
+
